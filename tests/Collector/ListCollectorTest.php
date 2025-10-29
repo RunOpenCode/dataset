@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RunOpenCode\Component\Dataset\Tests\Collector;
+namespace RunOpenCode\Component\Dataset\tests\Collector;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use RunOpenCode\Component\Dataset\Collector\ArrayCollector;
+use RunOpenCode\Component\Dataset\Collector\ListCollector;
 use RunOpenCode\Component\Dataset\Exception\LogicException;
 use RunOpenCode\Component\Dataset\Reducer\Average;
 use RunOpenCode\Component\Dataset\Reducer\Count;
@@ -15,19 +15,14 @@ use RunOpenCode\Component\Dataset\Reducer\Sum;
 use function RunOpenCode\Component\Dataset\collect;
 use function RunOpenCode\Component\Dataset\stream;
 
-final class ArrayCollectorTest extends TestCase
+final class ListCollectorTest extends TestCase
 {
     #[Test]
     public function iterates(): void
     {
-        $dataset = [
-            'a' => 2,
-            'b' => 10,
-            'c' => 5,
-            'd' => 1,
-        ];
+        $dataset = [2, 10, 5, 1];
 
-        $collector = collect($dataset, ArrayCollector::class);
+        $collector = collect($dataset, ListCollector::class);
 
         $this->assertSame($dataset, \iterator_to_array($collector));
         $this->assertSame($dataset, $collector->value);
@@ -36,22 +31,27 @@ final class ArrayCollectorTest extends TestCase
     #[Test]
     public function array_access(): void
     {
-        $dataset = [
-            'a' => 2,
-            'b' => 10,
-            'c' => 5,
-            'd' => 1,
-        ];
+        $dataset = [2, 10, 5, 1];
 
-        $collector = collect($dataset, ArrayCollector::class);
+        $collector = collect($dataset, ListCollector::class);
 
-        $this->assertSame(2, $collector['a']);
-        $this->assertArrayHasKey('b', $collector);
+        $this->assertSame(2, $collector[0]);
+        $this->assertArrayHasKey(1, $collector);
     }
 
     #[Test]
     public function counts(): void
     {
+        $dataset = [2, 10, 5, 1];
+
+        $collector = collect($dataset, ListCollector::class);
+
+        $this->assertCount(4, $collector);
+    }
+
+    #[Test]
+    public function converts_to_list(): void
+    {
         $dataset = [
             'a' => 2,
             'b' => 10,
@@ -59,24 +59,22 @@ final class ArrayCollectorTest extends TestCase
             'd' => 1,
         ];
 
-        $collector = collect($dataset, ArrayCollector::class);
+        $collector = collect($dataset, ListCollector::class);
 
-        $this->assertCount(4, $collector);
+        $this->assertSame(\array_values($dataset), \iterator_to_array($collector));
+        $this->assertSame(\array_values($dataset), $collector->value);
     }
 
     #[Test]
     public function aggregates(): void
     {
-        $dataset = [
-            'a' => 2,
-            'b' => 10,
-        ];
+        $dataset = [2, 10];
 
         $collector = stream($dataset)
             ->aggregate('count', Count::class)
             ->aggregate('sum', Sum::class)
             ->aggregate('average', Average::class)
-            ->collect(ArrayCollector::class);
+            ->collect(ListCollector::class);
 
         $this->assertSame(2, $collector->aggregators['count']);
         $this->assertSame(12, $collector->aggregators['sum']);
@@ -88,7 +86,7 @@ final class ArrayCollectorTest extends TestCase
     {
         $this->expectException(LogicException::class);
 
-        collect([], ArrayCollector::class)['foo'] = 'bar';
+        collect([], ListCollector::class)[10] = 'bar';
     }
 
     #[Test]
@@ -96,6 +94,6 @@ final class ArrayCollectorTest extends TestCase
     {
         $this->expectException(LogicException::class);
 
-        unset(collect([], ArrayCollector::class)['foo']);
+        unset(collect([], ListCollector::class)[20]);
     }
 }

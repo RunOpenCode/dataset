@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RunOpenCode\Component\Dataset\Tests\Collector;
+namespace RunOpenCode\Component\Dataset\tests\Collector;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -73,6 +73,7 @@ final class CursoredCollectorTest extends TestCase
             'a' => 2,
             'b' => 10,
         ], \iterator_to_array($collector));
+
         $this->assertSame(4, $collector->previous);
         $this->assertSame(8, $collector->next);
         $this->assertSame(2, $collector->aggregators['count']);

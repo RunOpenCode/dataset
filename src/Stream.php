@@ -7,21 +7,21 @@ namespace RunOpenCode\Component\Dataset;
 use RunOpenCode\Component\Dataset\Contract\CollectorInterface;
 use RunOpenCode\Component\Dataset\Contract\ReducerInterface;
 
+use function RunOpenCode\Component\Dataset\aggregate as dataset_aggregate;
 use function RunOpenCode\Component\Dataset\batch as dataset_batch;
+use function RunOpenCode\Component\Dataset\collect as dataset_collect;
 use function RunOpenCode\Component\Dataset\distinct as dataset_distinct;
 use function RunOpenCode\Component\Dataset\filter as dataset_filter;
 use function RunOpenCode\Component\Dataset\flatten as dataset_flatten;
 use function RunOpenCode\Component\Dataset\map as dataset_map;
 use function RunOpenCode\Component\Dataset\merge as dataset_merge;
+use function RunOpenCode\Component\Dataset\reduce as dataset_reduce;
 use function RunOpenCode\Component\Dataset\reverse as dataset_reverse;
 use function RunOpenCode\Component\Dataset\skip as dataset_skip;
+use function RunOpenCode\Component\Dataset\sort as dataset_sort;
 use function RunOpenCode\Component\Dataset\take as dataset_take;
 use function RunOpenCode\Component\Dataset\takeUntil as dataset_take_until;
 use function RunOpenCode\Component\Dataset\tap as dataset_tap;
-use function RunOpenCode\Component\Dataset\aggregate as dataset_aggregate;
-use function RunOpenCode\Component\Dataset\collect as dataset_collect;
-use function RunOpenCode\Component\Dataset\reduce as dataset_reduce;
-use function RunOpenCode\Component\Dataset\sort as dataset_sort;
 
 /**
  * Dataset iterable stream.
